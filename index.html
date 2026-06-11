@@ -25,7 +25,11 @@ body { margin: 0; background: #f5f5f7; font-family: -apple-system, BlinkMacSyste
 #cg-header-back { font-size: 13px; opacity: .85; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; }
 #cg-header-back:hover { opacity: 1; }
 #cg-header-title { font-size: 18px; font-weight: 700; letter-spacing: -.3px; -webkit-box-flex: 1; flex: 1; text-align: center; }
-#cg-header-right { min-width: 80px; text-align: right; }
+#cg-header-right { min-width: 80px; text-align: right; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-box-pack: end; -webkit-justify-content: flex-end; justify-content: flex-end; }
+#cg-header-download { font-size: 13px; opacity: .85; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; }
+#cg-header-download:hover { opacity: 1; }
+#cg-header-download > * + * { margin-left: 4px; }
+#cg-header-right > * + * { margin-left: 10px; }
 
 /* ── Layout ── */
 #cg-root { max-width: 1100px; margin: 0 auto; padding: 20px 12px 48px; }
@@ -333,12 +337,17 @@ body { background:#eef1f6; }
 
 <!-- ChronoGraph header -->
 <div id="cg-header">
-  <a id="cg-header-back" href="index.html">
+  <!-- Scheme-relative: stays on http for legacy devices, https for modern -->
+  <a id="cg-header-back" href="//chronarchive.com/">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
     ChronArchive
   </a>
   <div id="cg-header-title">ChronoGraph</div>
   <div id="cg-header-right">
+    <a id="cg-header-download" href="Downloader/">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12"></path><polyline points="6 11 12 17 18 11"></polyline><path d="M4 21h16"></path></svg>
+    Download
+    </a>
     <span id="cg-header-user" style="font-size:13px;opacity:.9"></span>
   </div>
 </div>
