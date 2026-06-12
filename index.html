@@ -720,6 +720,7 @@ var cgState = {
   dmThreadUid: null, dmThreadName: null,
   dmPollTimer: null, lastMsgId: 0,
   dmSeenIds: {}, dmThreadReqSeq: 0, dmThreadLoading: false,
+  feedSeenIds: {}, feedReqSeq: 0,
   composeType: 'image', composeImgData: null,
   editAvData: null,
   sendDmPostId: null,
@@ -1013,18 +1014,32 @@ function toggleFriend(uid, action) {
 
 function loadFeed(page, reset) {
   cgState.feedPage = page;
-  if (reset) document.getElementById('cg-feed').innerHTML = '<div class="cg-loading">Loading&hellip;</div>';
+  var seq = ++cgState.feedReqSeq;
+  if (reset) {
+    cgState.feedSeenIds = {};
+    document.getElementById('cg-feed').innerHTML = '<div class="cg-loading">Loading&hellip;</div>';
+  }
   req('GET', '/api/posts?page=' + page, null, function(d, err) {
+    if (seq !== cgState.feedReqSeq) return; // stale response, newer request in flight
     if (err || !d.ok) {
       document.getElementById('cg-feed').innerHTML = '<div class="cg-empty">Could not load posts.</div>';
       return;
     }
     var html = '';
-    for (var i = 0; i < d.posts.length; i++) html += renderPost(d.posts[i]);
+    for (var i = 0; i < d.posts.length; i++) {
+      var p = d.posts[i];
+      if (!cgState.feedSeenIds[p.id]) {
+        cgState.feedSeenIds[p.id] = 1;
+        html += renderPost(p);
+      }
+    }
     if (reset) {
       document.getElementById('cg-feed').innerHTML = html || '<div class="cg-empty">No posts yet. Be the first!</div>';
     } else {
-      document.getElementById('cg-feed').innerHTML += html;
+      var feed = document.getElementById('cg-feed');
+      var loading = feed.getElementsByClassName('cg-loading');
+      if (loading.length) feed.removeChild(loading[0]);
+      feed.innerHTML += html;
     }
     var more = document.getElementById('cg-feed-more');
     more.style.display = d.posts.length === 20 ? 'block' : 'none';
