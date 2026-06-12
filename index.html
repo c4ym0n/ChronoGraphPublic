@@ -1400,7 +1400,8 @@ function submitPost() {
   }
   var btn = document.getElementById('cp-submit');
   btn.disabled = true; btn.textContent = 'Posting…';
-  req('POST', '/api/posts', {type:type, title:title, description:desc, tags:tags, media_data:media}, function(d, err) {
+  var cid = 'cgp-' + (cgState.userId || 0) + '-' + (new Date().getTime()) + '-' + Math.floor(Math.random() * 10000);
+  req('POST', '/api/posts', {type:type, title:title, description:desc, tags:tags, media_data:media, client_id:cid}, function(d, err) {
     btn.disabled = false; btn.textContent = 'Post';
     if (err || !d.ok) { showErr('cg-compose-err', d && d.error ? d.error : 'Failed to post.'); return; }
     closeModal('cg-compose-modal');
